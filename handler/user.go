@@ -26,7 +26,7 @@ func (h *Handler) Signup(c echo.Context) (err error) {
 	// Save user
 	db := h.DB.Clone()
 	defer db.Close()
-	if err = db.DB("twitter").C("users").Insert(u); err != nil {
+	if err = db.DB("oh").C("users").Insert(u); err != nil {
 		return
 	}
 
@@ -43,7 +43,7 @@ func (h *Handler) Login(c echo.Context) (err error) {
 	// Find user
 	db := h.DB.Clone()
 	defer db.Close()
-	if err = db.DB("twitter").C("users").
+	if err = db.DB("oh").C("users").
 		Find(bson.M{"email": u.Email, "password": u.Password}).One(u); err != nil {
 		if err == mgo.ErrNotFound {
 			return &echo.HTTPError{Code: http.StatusUnauthorized, Message: "invalid email or password"}
@@ -80,7 +80,7 @@ func (h *Handler) Follow(c echo.Context) (err error) {
 	// Add a follower to user
 	db := h.DB.Clone()
 	defer db.Close()
-	if err = db.DB("twitter").C("users").
+	if err = db.DB("oh").C("users").
 		UpdateId(bson.ObjectIdHex(id), bson.M{"$addToSet": bson.M{"followers": userID}}); err != nil {
 		if err == mgo.ErrNotFound {
 			return echo.ErrNotFound

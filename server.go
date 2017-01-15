@@ -30,7 +30,7 @@ func main() {
 	}
 
 	// Create indices
-	if err = db.Copy().DB("twitter").C("users").EnsureIndex(mgo.Index{
+	if err = db.Copy().DB("oh").C("users").EnsureIndex(mgo.Index{
 		Key:    []string{"email"},
 		Unique: true,
 	}); err != nil {
@@ -48,5 +48,5 @@ func main() {
 	e.GET("/feed", h.FetchPost)
 
 	// Start server
-	e.Logger.Fatal(e.Start(":1323"))
+	e.Logger.Fatal(e.Start(":2333"))
 }

@@ -4,8 +4,8 @@ import (
 	"net/http"
 	"strconv"
 
+	"github.com/gensokyoo/oh/model"
 	"github.com/labstack/echo"
-	"github.com/labstack/echo/examples/twitter/model"
 	mgo "gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 )
@@ -30,7 +30,7 @@ func (h *Handler) CreatePost(c echo.Context) (err error) {
 	// Find user from database
 	db := h.DB.Clone()
 	defer db.Close()
-	if err = db.DB("twitter").C("users").FindId(u.ID).One(u); err != nil {
+	if err = db.DB("oh").C("users").FindId(u.ID).One(u); err != nil {
 		if err == mgo.ErrNotFound {
 			return echo.ErrNotFound
 		}
@@ -38,7 +38,7 @@ func (h *Handler) CreatePost(c echo.Context) (err error) {
 	}
 
 	// Save post in database
-	if err = db.DB("twitter").C("posts").Insert(p); err != nil {
+	if err = db.DB("oh").C("posts").Insert(p); err != nil {
 		return
 	}
 	return c.JSON(http.StatusCreated, p)
@@ -60,7 +60,7 @@ func (h *Handler) FetchPost(c echo.Context) (err error) {
 	// Retrieve posts from database
 	posts := []*model.Post{}
 	db := h.DB.Clone()
-	if err = db.DB("twitter").C("posts").
+	if err = db.DB("oh").C("posts").
 		Find(bson.M{"to": userID}).
 		Skip((page - 1) * limit).
 		Limit(limit).
